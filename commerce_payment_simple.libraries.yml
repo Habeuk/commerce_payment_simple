@@ -4,3 +4,11 @@ stripe:
       css/stripe.css: {}
   js:
     js/stripe.js: {}
+  dependencies:
+    - commerce_payment_simple/stripe_api
+
+stripe_api:
+  js:
+    https://js.stripe.com/basil/stripe.js:
+      type: external
+      minified: true

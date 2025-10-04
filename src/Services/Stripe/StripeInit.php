@@ -17,9 +17,6 @@ class StripeInit {
   private bool $paymentAutomatique = true;
   private string $stripe_public_key;
   
-  public function __construct() {
-  }
-  
   /**
    * Vérifie si un PaymentIntent est encore valide et réutilisable
    *

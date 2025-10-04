@@ -1,0 +1,61 @@
+// Vous devez utiliser l'une des approches.
+// @use "@stephane888/wbu-atomique/scss/wbu-ressources-clean.scss" as *;
+@use "/siteweb/habeuk/public/web/themes/custom/drush_site_install/wbu-atomique-theme/src/scss/drush_site_install_variables.scss" as *;
+
+.payment-container {
+  border-radius: $wbu-margin;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  .payment-form,
+  .order-summary {
+    padding: $wbu-margin * 2;
+  }
+  .order-summary {
+    color: white;
+    border-radius: 0 $wbu-margin $wbu-margin 0;
+    position: relative;
+    background-image: url(/sites/default/files/styles/wide_1900/public/2025-07/pexels-artempodrez-7233376_4.jpg?itok=2H37nU1a);
+    background-size: contain;
+    &::before {
+      content: "";
+      background: linear-gradient(135deg, $wbu-background 0%, $wbu-color-secondary 100%);
+      opacity: 0.9;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+      border-radius: 0 $wbu-margin $wbu-margin 0;
+    }
+    > * {
+      position: relative;
+      z-index: 2;
+    }
+    .title {
+      margin-bottom: $wbu-margin;
+      svg {
+        fill: color-yiq($wbu-background);
+        margin-right: $wbu-margin;
+      }
+    }
+  }
+  .payment-form {
+    background: linear-gradient(135deg, #ffffff 0%, #f0f2ff 100%);
+    border-radius: $wbu-margin 0 0 $wbu-margin;
+  }
+  @include media-min(MD) {
+    .payment-form {
+      width: calc(100% - 390px);
+    }
+    .order-summary {
+      width: 390px;
+    }
+  }
+  .security-badges {
+    display: flex;
+    justify-content: center;
+    gap: $wbu-margin;
+    margin-top: $wbu-margin * 1.25;
+    padding: $wbu-margin;
+  }
+}

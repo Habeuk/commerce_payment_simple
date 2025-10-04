@@ -20,14 +20,12 @@ plugins.push(
 console.log("devMode : ", devMode);
 module.exports = {
   plugins,
-  mode: env || "development", // On définit le mode en fonction de la valeur de NODE_ENV
+  mode: env || "development",
   entry: {
-    popin: "./src/js/popin-drupal.js",
+    stripe: "./src/js/stripe-drupal.js",
   },
   output: {
-    //path: path.resolve(__dirname, "../css/"),
     path: path.resolve(__dirname, "../css/"),
-    // publicPath: "/dist/",
     filename: "../js/[name].js",
   },
   devtool: devMode ? "inline-source-map" : false,
@@ -58,6 +56,7 @@ module.exports = {
             loader: "css-loader",
             options: {
               importLoaders: 1,
+              url: false, // Désactive le traitement des URLs
             },
           },
           {
@@ -66,13 +65,13 @@ module.exports = {
               sourceMap: true,
             },
           },
-          {
-            loader: "resolve-url-loader", // améliore la résolution des chemins relatifs
-            // (utile par exemple quand une librairie tierce fait référence à des images ou des fonts situés dans son propre dossier)
-            options: {
-              publicPath: "../images",
-            },
-          },
+          // {
+          //   loader: "resolve-url-loader", // améliore la résolution des chemins relatifs
+          //   // (utile par exemple quand une librairie tierce fait référence à des images ou des fonts situés dans son propre dossier)
+          //   options: {
+          //     publicPath: "../images",
+          //   },
+          // },
           {
             loader: "sass-loader",
             options: {

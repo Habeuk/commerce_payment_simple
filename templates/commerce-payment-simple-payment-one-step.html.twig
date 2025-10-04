@@ -4,120 +4,93 @@
  * Template for the secure payment page.
  */
 #}
-<div class="container">
-    <div class="payment-container">
-        <div class="payment-form">
-            <div class="header">
-                <h2><i class="fas fa-lock"></i> Paiement Sécurisé</h2>
-                <p>Finalisez votre commande en toute sécurité</p>
-            </div>
-            
-            <form id="payment-form">
-                <div class="form-group">
-                    <label for="card-number">Numéro de carte</label>
-                    <div class="input-group">
-                        <i class="far fa-credit-card"></i>
-                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="cardholder">Nom du titulaire</label>
-                    <div class="input-group">
-                        <i class="far fa-user"></i>
-                        <input type="text" id="cardholder" placeholder="Jean DUPONT">
-                    </div>
-                </div>
-                
-                <div class="card-details">
-                    <div class="form-group">
-                        <label for="expiry-date">Date d'expiration</label>
-                        <div class="input-group">
-                            <i class="far fa-calendar-alt"></i>
-                            <input type="text" id="expiry-date" placeholder="MM/AA" maxlength="5">
+
+<section class="full-page-payments">
+    <div class="container">
+        <div class="payment-container d-flex justify-content-center mx-auto margin-top margin-bottom width-tablet">
+            <div class="payment-form d-flex flex-column justify-content-between">
+                <div class="header">
+                    <h3><i class="fas fa-lock"></i> Paiement Sécurisé</h3>
+                    <p>Finalisez votre commande en toute sécurité</p>
+                </div>                
+                <form class="payment-form--">
+                	{% if stripe_public_key and client_secret %}
+                    	<div class="payment-form-element width-phone bg-light p-4 p-md-5" data-return_url="{{ return_url }}" data-stripe_public_key="{{ stripe_public_key }}" data-client_secret="{{ client_secret }}">
+                          <div class="payment-element">
+                            {# Stripe.js injects the Payment Element #}
+                          </div>
+                          <span class="submit-payment btn btn-outline-primary mt-4">
+                            <span class="spinner hidden" id="spinner"></span>
+                            <span class="button-text"> Payer </span>
+                          </span>
+                          <div class="hidden payment-message"></div>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="cvv">Code de sécurité</label>
-                        <div class="input-group">
-                            <i class="fas fa-shield-alt"></i>
-                            <input type="text" id="cvv" placeholder="123" maxlength="3">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="security-badges">
+                        {% else %}
+                        <div class="alert alert-danger border-radius-10 margin-top margin-bottom"> <h4>Erreur de configuration</h4> <p> veillez essayer plus tard</p> </div>                        
+                    {% endif %}                    
+                </form>
+                <div class="security-badges bg-wbu-thirdly border-radius-10">
                     <div class="badge">
-                        <i class="fas fa-lock"></i>
+                        <div class="mb-2"> {% include '@commerce_payment_simple/includes/ssl-icon.html.twig' %} </div>
                         <span>Paiement<br>sécurisé SSL</span>
                     </div>
                     <div class="badge">
-                        <i class="fas fa-shield-alt"></i>
+                        <div class="mb-2"> {% include '@commerce_payment_simple/includes/safe-icon.html.twig' %} </div>
                         <span>Protection<br>anti-fraude</span>
                     </div>
                     <div class="badge">
-                        <i class="fas fa-user-shield"></i>
+                        <div class="mb-2"> {% include '@commerce_payment_simple/includes/privacy-icon.html.twig' %} </div>
                         <span>Vos données<br>protégées</span>
                     </div>
                 </div>
-                
-                <button type="submit" class="btn-pay">
-                    <i class="fas fa-lock"></i> Payer maintenant 190,00 €
-                </button>
-                
-                <a href="#" class="back-link">
-                    <i class="fas fa-arrow-left"></i> Retour à la commande
-                </a>
-            </form>
-        </div>
-        
-        <div class="order-summary">
-            <h2><i class="fas fa-shopping-bag"></i> Votre Commande</h2>
+            </div>
             
-            <div class="order-items">
-                <div class="order-item">
-                    <div>
-                        <strong>Site E-commerce Premium</strong>
-                        <div style="font-size: 0.9rem; opacity: 0.9;">Livraison en 72h</div>
+            <div class="order-summary">
+                <h3 class="title d-flex justify-content-center align-items-baseline"> {% include '@commerce_payment_simple/includes/shopping-bag-icon.html.twig' %} Votre Commande </h3 >                
+                <div class="order-items">
+                    <div class="order-item">
+                        <div>
+                            <strong>Site E-commerce Premium</strong>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Livraison en 72h</div>
+                        </div>
+                        <div>190,00 €</div>
                     </div>
+                    
+                    <div class="order-item">
+                        <div>
+                            <strong>Hébergement 1 mois offert</strong>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">Valeur 9,90 €</div>
+                        </div>
+                        <div>0,00 €</div>
+                    </div>
+                    
+                    <div class="order-item">
+                        <div>
+                            <strong>Formation incluse</strong>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">1 heure de formation</div>
+                        </div>
+                        <div>0,00 €</div>
+                    </div>
+                </div>
+                
+                <div class="order-total">
+                    <div>Total TTC</div>
                     <div>190,00 €</div>
                 </div>
                 
-                <div class="order-item">
-                    <div>
-                        <strong>Hébergement 1 mois offert</strong>
-                        <div style="font-size: 0.9rem; opacity: 0.9;">Valeur 9,90 €</div>
-                    </div>
-                    <div>0,00 €</div>
+                <div class="guarantee">
+                    <i class="fas fa-award"></i>
+                    <h3>Garantie Satisfait ou Remboursé</h3>
+                    <p>14 jours pour changer d'avis. Remboursement intégral si insatisfait.</p>
                 </div>
                 
-                <div class="order-item">
-                    <div>
-                        <strong>Formation incluse</strong>
-                        <div style="font-size: 0.9rem; opacity: 0.9;">1 heure de formation</div>
-                    </div>
-                    <div>0,00 €</div>
+                <div class="payment-methods">
+                    <div class="payment-method">VISA</div>
+                    <div class="payment-method">MC</div>
+                    <div class="payment-method">CB</div>
+                    <div class="payment-method">PP</div>
                 </div>
-            </div>
-            
-            <div class="order-total">
-                <div>Total TTC</div>
-                <div>190,00 €</div>
-            </div>
-            
-            <div class="guarantee">
-                <i class="fas fa-award"></i>
-                <h3>Garantie Satisfait ou Remboursé</h3>
-                <p>14 jours pour changer d'avis. Remboursement intégral si insatisfait.</p>
-            </div>
-            
-            <div class="payment-methods">
-                <div class="payment-method">VISA</div>
-                <div class="payment-method">MC</div>
-                <div class="payment-method">CB</div>
-                <div class="payment-method">PP</div>
             </div>
         </div>
     </div>
-</div>
+</section>
