@@ -1,8 +1,8 @@
-commerce_payment_simple.example:
-  path: '/commerce-payment-simple/product/{product_id}'
+commerce_payment_simple.payment_one_step:
+  path: '/commerce-payment/safe-checkout/{product_variation_id}'
   defaults:
-    _title: 'Example'
-    _controller: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController'
+    _title: 'Payment simple et securisé'
+    _controller: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController:paymentOneStep'
   requirements:
     _permission: 'access content'
 

@@ -1,6 +1,18 @@
 <?php
 
 /**
+ *
  * @file
  * Primary module hooks for Commerce Payment Simple module.
  */
+
+/**
+ * Implemente hook_theme
+ */
+function commerce_payment_simple_theme($existing, $type, $theme, $path) {
+  $templates = [];
+  $templates['commerce_payment_simple_payment_one_step'] = [
+    'render element' => 'element'
+  ];
+  return $templates;
+}

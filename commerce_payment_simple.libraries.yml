@@ -1,0 +1,6 @@
+stripe:
+  css:
+    theme:
+      css/stripe.css: {}
+  js:
+    js/stripe.js: {}
