@@ -1,0 +1,8 @@
+# Schema for the configuration files of the Commerce Payment Simple module.
+commerce_payment_simple.settings:
+  type: config_object
+  label: 'Commerce Payment Simple settings'
+  mapping:
+    example:
+      type: string
+      label: 'Example'

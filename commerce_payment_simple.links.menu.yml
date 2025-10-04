@@ -1,0 +1,5 @@
+commerce_payment_simple.settings:
+  title: Commerce payment config
+  parent: system.admin_config_system
+  route_name: commerce_payment_simple.settings
+  weight: 10

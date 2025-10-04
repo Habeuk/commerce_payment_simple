@@ -1,0 +1,17 @@
+{
+    "name": "habeuk/commerce_payment_simple",
+    "description": "module de paiement via stripe",
+    "type": "drupal-module",
+    "license": "MIT",    
+    "authors": [
+        {
+            "name": "kouwa stephane",
+            "email": "kksasteph888@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    	"php": "^8.2",
+    	"drupal/commerce": "^3.2.0"    	
+    }
+}

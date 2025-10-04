@@ -1,0 +1,15 @@
+commerce_payment_simple.example:
+  path: '/commerce-payment-simple/product/{product_id}'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController'
+  requirements:
+    _permission: 'access content'
+
+commerce_payment_simple.settings:
+  path: '/admin/config/system/settings'
+  defaults:
+    _title: 'Settings'
+    _form: 'Drupal\commerce_payment_simple\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'

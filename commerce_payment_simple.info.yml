@@ -1,0 +1,8 @@
+name: 'Commerce Payment Simple'
+type: module
+description: "Allows payment to be made"
+package: Custom
+core_version_requirement: ^10 || ^11
+dependencies:
+  - commerce_order:commerce_order
+  - commerce_payment:commerce_payment
