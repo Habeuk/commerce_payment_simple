@@ -27,7 +27,16 @@ final class PaymentStripeForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $form['name_firstname'] = [
+    $form['information'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'div',
+      '#attributes' => [
+        'class' => [
+          'my-5'
+        ]
+      ]
+    ];
+    $form['information']['name_firstname'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Nom et Prénom'),
       '#required' => TRUE,
@@ -39,7 +48,7 @@ final class PaymentStripeForm extends FormBase {
         ]
       ]
     ];
-    $form['email'] = [
+    $form['information']['email'] = [
       '#type' => 'email',
       '#title' => $this->t('Adresse e-mail'),
       '#required' => TRUE,
