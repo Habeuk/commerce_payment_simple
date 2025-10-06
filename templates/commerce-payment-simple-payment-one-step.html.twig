@@ -6,17 +6,18 @@
 #}
 <section class="full-page-payments">
     <div class="container">
-        <div class="payment-container d-flex justify-content-center mx-auto margin-top margin-bottom width-tablet">
+        <div class="payment-container d-flex justify-content-center mx-auto margin-top margin-bottom width-tablet">        
             <div class="payment-form d-flex flex-column justify-content-between">
                 <div class="header text-center">
                     <h3><i class="fas fa-lock"></i> Paiement Sécurisé</h3>
                     <p>Finalisez votre commande en toute sécurité</p>
-                </div>                
-                <form class="payment-form--">
+                </div>
                 	{% if stripe_public_key and client_secret and return_url %}
-                    	<div class="payment-form-element width-phone bg-light p-4 p-md-5" data-return_url="{{ return_url }}" data-stripe_public_key="{{ stripe_public_key }}" data-client_secret="{{ client_secret }}">
+                	{{ element['#form']}}
+                		{#
+                		<label for="exampleFormControlInput1" class="form-label">Methode de paiement</label>
+                    	<div class="payment-form-element width-phone" data-return_url="{{ return_url }}" data-stripe_public_key="{{ stripe_public_key }}" data-client_secret="{{ client_secret }}">
                           <div class="payment-element">
-                            {# Stripe.js injects the Payment Element #}
                             Chargement encours ...
                           </div>
                           <span class="submit-payment btn mt-5 btn-wbu-secondary w-100 border-radius-10 fw-light btn-lg">
@@ -24,11 +25,11 @@
                             <span class="button-text"> {{ text_button_payment }} </span>
                           </span>
                           <div class="hidden payment-message"></div>
-                        </div>                        
+                        </div>      
+                        #}                  
                         {% else %}
                         <div class="alert alert-danger border-radius-10 margin-top margin-bottom"> <h4>Erreur de configuration</h4> <p> veillez essayer plus tard</p> </div>                        
-                    {% endif %}                    
-                </form>
+                    {% endif %}   
                 <div class="security-badges bg-wbu-thirdly border-radius-10">
                     <div class="badge">
                         <div class="mb-2"> {% include '@commerce_payment_simple/includes/ssl-icon.html.twig' %} </div>

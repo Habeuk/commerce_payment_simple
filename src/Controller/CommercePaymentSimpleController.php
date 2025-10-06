@@ -42,40 +42,49 @@ final class CommercePaymentSimpleController extends ControllerBase {
       return $this->redirect('<front>');
     }
     $product = $productVariation->getProduct();
-    $form = $this->formBuilder()->getForm("Drupal\commerce_payment_simple\Form\PaymentStripeForm");
-    $payment_intent_id = null;
-    // On recupere la session.
+    
+    $order_id = null;
     if ($request->hasSession()) {
       /**
        *
        * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
        */
       $session = $request->getSession();
-      $payment_intent_id = $session->get('commerce_payment_simple.payment_intent_id');
+      $order_id = $session->get('commerce_payment_simple.order_id');
     }
-    
-    if ($payment_intent_id) {
-      //
-    }
-    else {
-      
-      // $this->stripeService->CreatePaymentIntent($amount);
-    }
-    $data = $this->managePaymentOrder->CreatePaymentIntentFromProduct($productVariation);
+    $data = $this->managePaymentOrder->CreatePaymentIntentFromProduct($productVariation, $order_id);
     /**
      *
      * @var Order $order
      */
     $order = $data['order'];
+    if (!$order_id) {
+      if ($request->hasSession()) {
+        /**
+         *
+         * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+         */
+        $session = $request->getSession();
+        $order_id = $session->set('commerce_payment_simple.order_id', $order->id());
+      }
+    }
     $price = $order->getTotalPrice();
     $price_formatter = $this->priceFormatter->format($price->getNumber(), $price->getCurrencyCode());
     $text_button_payment = $this->t('Pay now : ') . $price_formatter;
     
     $return_url = Url::fromRoute('commerce_payment_simple.payment_end', [
-      'order_id' => 3
+      'order_id' => $order->id()
     ], [
       'absolute' => TRUE
     ])->toString();
+    $form = $this->formBuilder()->getForm("Drupal\commerce_payment_simple\Form\PaymentStripeForm", $data);
+    if ($form['payment_element_wrapper']['#attributes']) {
+      $form['payment_element_wrapper']['#attributes']['data-return_url'] = $return_url;
+      $form['payment_element_wrapper']['#attributes']['data-stripe_public_key'] = $data['stripe_public_key'];
+      $form['payment_element_wrapper']['#attributes']['data-client_secret'] = $data['client_secret'];
+      $form['payment_element_wrapper']['submit_payment_button'][0]['#value'] = $text_button_payment;
+      $form['actions']['submit']['#value'] = $text_button_payment;
+    }
     $build['content'] = [
       '#theme' => 'commerce_payment_simple_payment_one_step',
       '#form' => $form,

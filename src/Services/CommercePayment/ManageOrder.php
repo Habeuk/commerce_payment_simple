@@ -13,14 +13,15 @@ class ManageOrder extends StripeService {
   /**
    * Creer l'intention de payer à partir d'un produit.
    */
-  function CreatePaymentIntentFromProduct(ProductVariation $productVariation) {
+  function CreatePaymentIntentFromProduct(ProductVariation $productVariation, $order_id = null) {
     
     /**
      *
      * @var \Drupal\commerce_order\Entity\Order $Order
      */
-    $Order = Order::load(3);
-    if (!$Order) {
+    if ($order_id)
+      $Order = Order::load($order_id);
+    if (empty($Order)) {
       $Order = Order::create([
         'type' => 'commerce_payment_simple'
       ]);
