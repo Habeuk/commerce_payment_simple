@@ -1,30 +1,9 @@
-## INTRODUCTION
+### Explication du fonctionnement
 
-The Commerce Payment Simple module is a DESCRIBE_THE_MODULE_HERE.
+1 - lorsque le client clique sur le bouton payer 
+1-1 si l'utilisateur est connecté on verifie s'il a une commande avec ce produit donc l'intention de paye est toujours valide, si cest le cas on utilise cette commande (order).
+1-2 on cree sa commande (order).
+2 - On cree son intention de payer sur stripe, si l'utilisateur est connecté on l'associe la commande, si non on gere cela via une variable de session.
 
-The primary use case for this module is:
 
-- Use case #1
-- Use case #2
-- Use case #3
-
-## REQUIREMENTS
-
-DESCRIBE_MODULE_DEPENDENCIES_HERE
-
-## INSTALLATION
-
-Install as you would normally install a contributed Drupal module.
-See: https://www.drupal.org/node/895232 for further information.
-
-## CONFIGURATION
-- Configuration step #1
-- Configuration step #2
-- Configuration step #3
-
-## MAINTAINERS
-
-Current maintainers for Drupal 10:
-
-- FIRST_NAME LAST_NAME (NICKNAME) - https://www.drupal.org/u/NICKNAME
 

@@ -16,3 +16,14 @@ function commerce_payment_simple_theme($existing, $type, $theme, $path) {
   ];
   return $templates;
 }
+
+function commerce_payment_simple_preprocess_commerce_payment_simple_payment_one_step(&$vars) {
+  if (isset($vars['element']['#stripe_public_key']))
+    $vars['stripe_public_key'] = $vars['element']['#stripe_public_key'];
+  if (isset($vars['element']['#return_url']))
+    $vars['return_url'] = $vars['element']['#return_url'];
+  if (isset($vars['element']['#client_secret']))
+    $vars['client_secret'] = $vars['element']['#client_secret'];
+  if (isset($vars['element']['#text_button_payment']))
+    $vars['text_button_payment'] = $vars['element']['#text_button_payment'];
+}

@@ -31,15 +31,18 @@ class StripeService extends StripeInit {
    * @param string $paymentIntentId
    * @param float $amount
    * @param string $currency
-   * @return PaymentIntent
+   * @return PaymentIntent|false
    */
-  public function getPaymentIntent(string $paymentIntentId, float $amount, $currency = 'eur') {
+  public function getPaymentIntent(string $paymentIntentId): PaymentIntent|false {
     $paymentIntent = $this->getStripeInstance()->paymentIntents->retrieve($paymentIntentId);
-    // On regenere une PaymentIntent si celui encours à ehouer.
+    // On renvoit false si le paiement n'est plus valide.
     if ($this->isFail($paymentIntent)) {
-      return $this->CreatePaymentIntent($amount, $currency);
+      return false;
     }
-    return $paymentIntent;
+    // Le paiement doit etre dans un status en attente ...
+    if ($this->isPaymentIntentReusable($paymentIntent))
+      return $paymentIntent;
+    return false;
   }
   
 }

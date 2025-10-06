@@ -1,4 +1,4 @@
 services:
-  commerce_payment_simple.stripe:
-    class: Drupal\commerce_payment_simple\Services\Stripe\StripeService
+  commerce_payment_simple.manage_order:
+    class: Drupal\commerce_payment_simple\Services\CommercePayment\ManageOrder
     arguments: []

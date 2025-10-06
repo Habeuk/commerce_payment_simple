@@ -1,3 +1,12 @@
+commerce_payment_simple.payment_end:
+  path: '/commerce-payment/safe-checkout/{order_id}/completed'
+  defaults:
+    _title: 'Payment terminé'
+    _controller: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController:paymentCompleted'
+  requirements:
+    _permission: 'access content'
+
+
 commerce_payment_simple.payment_one_step:
   path: '/commerce-payment/safe-checkout/{product_variation_id}'
   defaults:

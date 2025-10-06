@@ -9,19 +9,21 @@ use Drupal\commerce_product\Entity\ProductVariation;
 use Stephane888\Debug\debugLog;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\commerce_payment_simple\Services\Stripe\StripeService;
+use Drupal\commerce_payment_simple\Services\CommercePayment\ManageOrder;
 use Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_price\CurrencyFormatter;
+use Drupal\Core\Url;
 
 /**
  * Returns responses for Commerce Payment Simple routes.
  */
 final class CommercePaymentSimpleController extends ControllerBase {
   
-  function __construct(private readonly StripeService $stripeService) {
+  function __construct(private readonly ManageOrder $managePaymentOrder, private readonly CurrencyFormatter $priceFormatter) {
   }
   
   public static function create(ContainerInterface $container) {
-    return new static($container->get('commerce_payment_simple.stripe'));
+    return new static($container->get('commerce_payment_simple.manage_order'), $container->get('commerce_price.currency_formatter'));
   }
   
   /**
@@ -57,14 +59,32 @@ final class CommercePaymentSimpleController extends ControllerBase {
     }
     else {
       
-      $this->stripeService->CreatePaymentIntent($amount);
+      // $this->stripeService->CreatePaymentIntent($amount);
     }
+    $data = $this->managePaymentOrder->CreatePaymentIntentFromProduct($productVariation);
+    /**
+     *
+     * @var Order $order
+     */
+    $order = $data['order'];
+    $price = $order->getTotalPrice();
+    $price_formatter = $this->priceFormatter->format($price->getNumber(), $price->getCurrencyCode());
+    $text_button_payment = $this->t('Pay now : ') . $price_formatter;
     
+    $return_url = Url::fromRoute('commerce_payment_simple.payment_end', [
+      'order_id' => 3
+    ], [
+      'absolute' => TRUE
+    ])->toString();
     $build['content'] = [
       '#theme' => 'commerce_payment_simple_payment_one_step',
       '#form' => $form,
       '#product' => $product,
       '#product_variation' => $productVariation,
+      '#client_secret' => $data['client_secret'],
+      '#stripe_public_key' => $data['stripe_public_key'],
+      '#text_button_payment' => $text_button_payment,
+      '#return_url' => $return_url,
       '#attached' => [
         'library' => [
           'commerce_payment_simple/stripe'
@@ -72,6 +92,10 @@ final class CommercePaymentSimpleController extends ControllerBase {
       ]
     ];
     return $build;
+  }
+  
+  public function paymentCompleted(): array {
+    return [];
   }
   
 }

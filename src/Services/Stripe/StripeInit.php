@@ -72,7 +72,8 @@ class StripeInit {
       'id' => $paymentIntent->id,
       'client_secret' => $paymentIntent->client_secret,
       'status' => $paymentIntent->status,
-      'en_attente_payment' => $this->isPaymentIntentReusable($paymentIntent)
+      'en_attente_payment' => $this->isPaymentIntentReusable($paymentIntent),
+      'stripe_public_key' => $this->getStripePublicKey()
     ];
   }
   
