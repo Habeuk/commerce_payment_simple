@@ -38,10 +38,10 @@ final class PaymentStripeForm extends FormBase {
     ];
     $form['information']['name_firstname'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Nom et Prénom'),
+      '#title' => $this->t('First and last name'),
       '#required' => TRUE,
       '#attributes' => [
-        'placeholder' => $this->t('Entrez votre nom complet'),
+        'placeholder' => $this->t('Enter your full name'),
         'class' => [
           'form-control',
           'mb-3'
@@ -50,7 +50,7 @@ final class PaymentStripeForm extends FormBase {
     ];
     $form['information']['email'] = [
       '#type' => 'email',
-      '#title' => $this->t('Adresse e-mail'),
+      '#title' => $this->t('E-mail address'),
       '#required' => TRUE,
       '#attributes' => [
         'placeholder' => '',
@@ -62,7 +62,7 @@ final class PaymentStripeForm extends FormBase {
     ];
     // Élément Stripe
     $form['payment_method_title'] = [
-      '#markup' => $this->t('<label class="form-label">Méthode de paiement</label>')
+      '#markup' => '<label class="form-label">' . $this->t('Payment Method') . '</label>'
     ];
     $form['payment_element_wrapper'] = [
       '#type' => 'container',
@@ -78,7 +78,7 @@ final class PaymentStripeForm extends FormBase {
       
       // Conteneur où Stripe.js va injecter le Payment Element
       'payment_element_placeholder' => [
-        '#markup' => '<div class="payment-element">Chargement encours ...</div>'
+        '#markup' => '<div class="payment-element">Loading...</div>'
       ],
       // Affichage des messages d'erreur/succès de Stripe
       'payment_message' => [
@@ -110,7 +110,7 @@ final class PaymentStripeForm extends FormBase {
               'submit-payment'
             ]
           ],
-          '#value' => 'kkkkkkkkkkkkkkk'
+          '#value' => ''
         ]
       ]
     ];
@@ -146,7 +146,7 @@ final class PaymentStripeForm extends FormBase {
           'progress' => [
             'type' => 'throbber', // Affiche un throbber/spinner pendant le
                                    // traitement
-            'message' => $this->t('Traitement du paiement...')
+            'message' => $this->t('Payment processing')
           ]
         ]
       ]
