@@ -13,6 +13,7 @@ use Drupal\commerce_payment_simple\Services\CommercePayment\ManageOrder;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_price\CurrencyFormatter;
 use Drupal\Core\Url;
+use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
  * Returns responses for Commerce Payment Simple routes.
@@ -29,7 +30,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
   /**
    * Payement en un seule etape.
    */
-  public function paymentOneStep(int $product_variation_id): array {
+  public function paymentOneStep(int $product_variation_id, Request $request): array {
     /**
      *
      * @var ProductVariation $productVariation
@@ -41,6 +42,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
       debugLog::symfonyDebug($_SERVER, 'commerce_payment_simple', true);
       return $this->redirect('<front>');
     }
+    $this->loadTranslate($productVariation);
     $data = $this->managePaymentOrder->CreatePaymentIntentFromProduct($productVariation);
     /**
      *
@@ -65,6 +67,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
       $form['payment_element_wrapper']['submit_payment_button'][0]['#value'] = $text_button_payment;
       $form['actions']['submit']['#value'] = $text_button_payment;
     }
+    
     $build['content'] = [
       '#theme' => 'commerce_payment_simple_payment_one_step',
       '#form' => $form,
@@ -81,11 +84,38 @@ final class CommercePaymentSimpleController extends ControllerBase {
         ]
       ]
     ];
+    $titlePrefix = $this->t("Payment");
+    // Le module page_title recupere ce title.
+    $build['#title'] = $titlePrefix . ' » ' . $productVariation->label();
+    // on passe ce titre à la requete
+    $request->attributes->set('_title', $build['#title']);
+    $build['content']['#title'] = 'Paiement : ' . $productVariation->label();
     return $build;
   }
   
-  public function paymentCompleted(): array {
+  public function paymentCompleted($order_id): array {
+    $this->managePaymentOrder->validatePayment($order_id);
     return [];
+  }
+  
+  /**
+   * Le plugin bloc more_fields_titre_de_la_page_encours recuperer le titre à
+   * partir du service titleResolver, donc les titres defini via '#title' ne
+   * fonctionent pas.
+   *
+   * @param Request $request
+   * @return string
+   */
+  public function getTitlePage(Request $request) {
+    return $request->attributes->get('_title');
+  }
+  
+  private function loadTranslate(&$entity) {
+    // on doit charger les données en fonction de la langue encours.
+    $lang_code = $this->languageManager()->getCurrentLanguage()->getId();
+    if ($entity->hasTranslation($lang_code)) {
+      $entity = $entity->getTranslation($lang_code);
+    }
   }
   
 }

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ManageOrder extends StripeService {
   private Request $request;
+  private const KEY_ORDER_IN_SESSION = 'commerce_payment_simple.order_id';
   
   function __construct(RequestStack $requestStack) {
     $this->request = $requestStack->getCurrentRequest();
@@ -70,6 +71,41 @@ class ManageOrder extends StripeService {
     return $data;
   }
   
+  public function validatePayment(int $order_id) {
+    $Order = Order::load($order_id);
+    if (!$Order) {
+      throw new \Exception("La commande n'existe plus ");
+    }
+    $paymentIntent = $this->getPaymentIntent($Order->getData('payment_intent_id'));
+    if (!$paymentIntent) {
+      throw new \Exception("Erreur lors de l'optention de l'intention de payment");
+    }
+    if ($Order->getState() != 'completed') {
+      if ($this->isPaid($paymentIntent)) {
+        $Order->set('state', 'completed');
+        $current_drupal_date_time = new DrupalDateTime('now', new \DateTimeZone('UTC'));
+        $current_timestamp = $current_drupal_date_time->getTimestamp();
+        $Order->setCompletedTime($current_timestamp);
+      }
+      else {
+        $Order->set('state', 'validation');
+      }
+      $Order->save();
+    }
+    $this->deleteOrderIdInSession();
+  }
+  
+  private function deleteOrderIdInSession() {
+    if ($this->request->hasSession()) {
+      /**
+       *
+       * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+       */
+      $session = $this->request->getSession();
+      $session->remove(self::KEY_ORDER_IN_SESSION);
+    }
+  }
+  
   private function setOrderIdInSession(int $order_id) {
     if ($this->request->hasSession()) {
       /**
@@ -77,7 +113,7 @@ class ManageOrder extends StripeService {
        * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
        */
       $session = $this->request->getSession();
-      $session->set('commerce_payment_simple.order_id', $order_id);
+      $session->set(self::KEY_ORDER_IN_SESSION, $order_id);
     }
   }
   
@@ -88,7 +124,7 @@ class ManageOrder extends StripeService {
        * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
        */
       $session = $this->request->getSession();
-      $order_id = $session->get('commerce_payment_simple.order_id');
+      $order_id = $session->get(self::KEY_ORDER_IN_SESSION);
     }
     return $order_id;
   }

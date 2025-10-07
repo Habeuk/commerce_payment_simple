@@ -10,8 +10,9 @@ commerce_payment_simple.payment_end:
 commerce_payment_simple.payment_one_step:
   path: '/commerce-payment/safe-checkout/{product_variation_id}'
   defaults:
-    _title: 'Payment simple et securisé'
+    _title: 'Simple and secure payment'
     _controller: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController:paymentOneStep'
+    _title_callback: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController::getTitlePage'
   requirements:
     _permission: 'access content'
 
