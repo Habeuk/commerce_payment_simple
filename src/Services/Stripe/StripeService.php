@@ -34,7 +34,13 @@ class StripeService extends StripeInit {
    * @return PaymentIntent|false
    */
   public function getPaymentIntent(string $paymentIntentId): PaymentIntent|false {
-    $paymentIntent = $this->getStripeInstance()->paymentIntents->retrieve($paymentIntentId);
+    try {
+      $paymentIntent = $this->getStripeInstance()->paymentIntents->retrieve($paymentIntentId);
+    }
+    catch (\Exception $e) {
+      return false;
+    }
+    
     // On renvoit false si le paiement n'est plus valide.
     if ($this->isFail($paymentIntent)) {
       return false;

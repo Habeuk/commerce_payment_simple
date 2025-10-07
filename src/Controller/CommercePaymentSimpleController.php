@@ -29,7 +29,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
   /**
    * Payement en un seule etape.
    */
-  public function paymentOneStep(int $product_variation_id, Request $request): array {
+  public function paymentOneStep(int $product_variation_id): array {
     /**
      *
      * @var ProductVariation $productVariation
@@ -41,40 +41,13 @@ final class CommercePaymentSimpleController extends ControllerBase {
       debugLog::symfonyDebug($_SERVER, 'commerce_payment_simple', true);
       return $this->redirect('<front>');
     }
-    $product = $productVariation->getProduct();
-    
-    $order_id = null;
-    if ($request->hasSession()) {
-      /**
-       *
-       * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-       */
-      $session = $request->getSession();
-      $order_id = $session->get('commerce_payment_simple.order_id');
-    }
-    $data = $this->managePaymentOrder->CreatePaymentIntentFromProduct($productVariation, $order_id);
+    $data = $this->managePaymentOrder->CreatePaymentIntentFromProduct($productVariation);
     /**
      *
      * @var Order $order
      */
     $order = $data['order'];
-    foreach ($order->getItems() as $item) {
-    /**
-     *
-     * @var \Drupal\commerce_order\Entity\OrderItem $item
-     */
-      // dd($item->getTotalPrice());
-    }
-    if (!$order_id) {
-      if ($request->hasSession()) {
-        /**
-         *
-         * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-         */
-        $session = $request->getSession();
-        $order_id = $session->set('commerce_payment_simple.order_id', $order->id());
-      }
-    }
+    
     $price = $order->getTotalPrice();
     $price_formatter = $this->priceFormatter->format($price->getNumber(), $price->getCurrencyCode());
     $text_button_payment = $this->t('Pay now : ') . $price_formatter;

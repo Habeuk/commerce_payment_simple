@@ -7,13 +7,23 @@ use Drupal\commerce_product\Entity\ProductVariation;
 use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_order\Entity\OrderItem;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 class ManageOrder extends StripeService {
+  private Request $request;
+  
+  function __construct(RequestStack $requestStack) {
+    $this->request = $requestStack->getCurrentRequest();
+  }
   
   /**
    * Creer l'intention de payer à partir d'un produit.
    */
   function CreatePaymentIntentFromProduct(ProductVariation $productVariation, $order_id = null) {
+    if (!$order_id) {
+      $order_id = $this->getOrderIdFromSession();
+    }
     
     /**
      *
@@ -44,6 +54,8 @@ class ManageOrder extends StripeService {
       $Order->setData('payment_intent_id', $paymentIntent->id);
       // save order
       $Order->save();
+      //
+      $this->setOrderIdInSession($Order->id());
     }
     if (!$Order->isNew()) {
       $paymentIntent = $this->getPaymentIntent($Order->getData('payment_intent_id'));
@@ -56,6 +68,29 @@ class ManageOrder extends StripeService {
     $data = $this->FormatPaymentIntent($paymentIntent);
     $data['order'] = $Order;
     return $data;
+  }
+  
+  private function setOrderIdInSession(int $order_id) {
+    if ($this->request->hasSession()) {
+      /**
+       *
+       * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+       */
+      $session = $this->request->getSession();
+      $session->set('commerce_payment_simple.order_id', $order_id);
+    }
+  }
+  
+  private function getOrderIdFromSession($order_id = null) {
+    if ($this->request->hasSession()) {
+      /**
+       *
+       * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+       */
+      $session = $this->request->getSession();
+      $order_id = $session->get('commerce_payment_simple.order_id');
+    }
+    return $order_id;
   }
   
   private function CreatePaymentIntentFromOrder(Order $Order) {
