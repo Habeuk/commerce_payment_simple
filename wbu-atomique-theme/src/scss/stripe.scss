@@ -58,4 +58,51 @@
     margin-top: $wbu-margin * 1.25;
     padding: $wbu-margin;
   }
+  //
+  .order-items {
+    margin-bottom: 25px;
+  }
+  .order-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .guarantee {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 30px;
+    text-align: center;
+    svg {
+      width: 5rem;
+      height: 7rem;
+    }
+  }
+  .payment-methods {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .payment-method {
+    width: 50px;
+    height: 30px;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: $wbu-color-primary;
+  }
+  .order-total {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
 }

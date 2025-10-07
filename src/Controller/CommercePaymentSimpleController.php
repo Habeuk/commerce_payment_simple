@@ -58,6 +58,13 @@ final class CommercePaymentSimpleController extends ControllerBase {
      * @var Order $order
      */
     $order = $data['order'];
+    foreach ($order->getItems() as $item) {
+    /**
+     *
+     * @var \Drupal\commerce_order\Entity\OrderItem $item
+     */
+      // dd($item->getTotalPrice());
+    }
     if (!$order_id) {
       if ($request->hasSession()) {
         /**
@@ -77,7 +84,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
     ], [
       'absolute' => TRUE
     ])->toString();
-    $form = $this->formBuilder()->getForm("Drupal\commerce_payment_simple\Form\PaymentStripeForm", $data);
+    $form = $this->formBuilder()->getForm("Drupal\commerce_payment_simple\Form\PaymentStripeForm");
     if ($form['payment_element_wrapper']['#attributes']) {
       $form['payment_element_wrapper']['#attributes']['data-return_url'] = $return_url;
       $form['payment_element_wrapper']['#attributes']['data-stripe_public_key'] = $data['stripe_public_key'];
@@ -88,7 +95,8 @@ final class CommercePaymentSimpleController extends ControllerBase {
     $build['content'] = [
       '#theme' => 'commerce_payment_simple_payment_one_step',
       '#form' => $form,
-      '#product' => $product,
+      '#product_variation' => $productVariation,
+      '#order' => $order,
       '#product_variation' => $productVariation,
       '#client_secret' => $data['client_secret'],
       '#stripe_public_key' => $data['stripe_public_key'],

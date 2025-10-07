@@ -26,4 +26,8 @@ function commerce_payment_simple_preprocess_commerce_payment_simple_payment_one_
     $vars['client_secret'] = $vars['element']['#client_secret'];
   if (isset($vars['element']['#text_button_payment']))
     $vars['text_button_payment'] = $vars['element']['#text_button_payment'];
+  if (isset($vars['element']['#product']))
+    $vars['product'] = $vars['element']['#product'];
+  if (isset($vars['element']['#order']))
+    $vars['order'] = $vars['element']['#order'];
 }
