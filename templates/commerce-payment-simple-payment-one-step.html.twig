@@ -46,48 +46,52 @@
                 </div>
                 <div class="mt-3"> <a href="/node/182" class="back-link"> <i class="fas fa-arrow-left"></i> {{'Return to order'|t}}</a> </div>
             </div>            
-            <div class="order-summary">
-                <h3 class="title d-flex justify-content-center align-items-baseline"> {% include '@commerce_payment_simple/includes/shopping-bag-icon.html.twig' %} Your Order </h3 >                
-                <div class="order-items">
-                    {% for item in order.getItems() %}
+            <div class="order-summary d-flex flex-column justify-content-between">
+                <h3 class="title d-flex justify-content-center align-items-baseline"> {% include '@commerce_payment_simple/includes/shopping-bag-icon.html.twig' %} {{'Your Order'|t}} </h3 >                
+                <div>
+                    <div class="order-items">
+                        {% for item in order.getItems() %}
+                            <div class="order-item">
+                                <div>
+                                    <strong>{{ item.label() }}</strong>
+                                    <div class="opacity-50 small">{{'Delivery in 72 hours'|t}}</div>
+                                </div>
+                                <div>{{ item.getTotalPrice()|commerce_price_format }}</div>
+                            </div>
+                        {% endfor %}                   
                         <div class="order-item">
                             <div>
-                                <strong>{{ item.label() }}</strong>
-                                <div class="opacity-50 small">{{'Delivery in 72 hours'|t}}</div>
+                                <strong>{{'1 month of free accommodation'|t}}</strong>
+                                <div class="opacity-50 small">{{'Value 9.90€'|t}}</div>
                             </div>
-                            <div>{{ item.getTotalPrice()|commerce_price_format }}</div>
+                            <div>0,00 €</div>
+                        </div>                    
+                        <div class="order-item">
+                            <div>
+                                <strong>{{'Training included'|t}}</strong>
+                                <div class="opacity-50 small">{{'1 hour of training'|t}}</div>
+                            </div>
+                            <div>0,00 €</div>
                         </div>
-                    {% endfor %}                   
-                    <div class="order-item">
-                        <div>
-                            <strong>{{'1 month of free accommodation'|t}}</strong>
-                            <div class="opacity-50 small">{{'Value 25.00€'|t}}</div>
-                        </div>
-                        <div>0,00 €</div>
-                    </div>                    
-                    <div class="order-item">
-                        <div>
-                            <strong>{{'Training included'|t}}</strong>
-                            <div class="opacity-50 small">{{'1 hour of training'|t}}</div>
-                        </div>
-                        <div>0,00 €</div>
+                    </div>                
+                    <div class="order-total h4 fw-bold">
+                        <div>{{'Total TTC'|t}}</div>
+                        <div>190,00 €</div>
+                    </div>  
+                </div>              
+               <div>
+               		 <div class="guarantee">                
+                        <div class="mb-2"> {% include '@commerce_payment_simple/includes/achievement-award-medal.html.twig' %} </div>
+                        <h3 class="h4">{{'Money Back Guarantee'|t}}</h3>
+                        <p>{{'14 days to change your mind. Full refund if not satisfied.'|t}}</p>
+                    </div>                
+                    <div class="payment-methods">
+                        <div class="payment-method">VISA</div>
+                        <div class="payment-method">MC</div>
+                        <div class="payment-method">CB</div>
+                        <div class="payment-method">PP</div>
                     </div>
-                </div>                
-                <div class="order-total h4 fw-bold">
-                    <div>{{'Total TTC'|t}}</div>
-                    <div>190,00 €</div>
-                </div>                
-                <div class="guarantee">                
-                    <div class="mb-2"> {% include '@commerce_payment_simple/includes/achievement-award-medal.html.twig' %} </div>
-                    <h3 class="h4">{{'Money Back Guarantee'|t}}</h3>
-                    <p>{{'14 days to change your mind. Full refund if not satisfied.'|t}}</p>
-                </div>                
-                <div class="payment-methods">
-                    <div class="payment-method">VISA</div>
-                    <div class="payment-method">MC</div>
-                    <div class="payment-method">CB</div>
-                    <div class="payment-method">PP</div>
-                </div>
+               </div>
             </div>
         </div>
     </div>

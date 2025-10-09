@@ -68,8 +68,8 @@ final class PaymentStripeForm extends FormBase {
       '#type' => 'container',
       '#attributes' => [
         'class' => [
-          'payment-form-element',
-          'width-phone'
+          'width-phone',
+          'payment-element-wrapper'
         ],
         'data-return_url' => '',
         'data-stripe_public_key' => '',
@@ -153,6 +153,7 @@ final class PaymentStripeForm extends FormBase {
     ];
     $form['#prefix'] = '<div id="commerce_payment_simple_form-wrapper-id">';
     $form['#suffix'] = '</div>';
+    $form['#attributes']['class'][] = 'payment-form-element';
     return $form;
   }
   

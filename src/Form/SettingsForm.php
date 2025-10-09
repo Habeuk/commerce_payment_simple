@@ -202,9 +202,6 @@ final class SettingsForm extends ConfigFormBase {
     $config->set('api_key_webform', $form_state->getValue('api_key_webform'));
     $config->save();
     
-    // Message de confirmation
-    $this->messenger()->addStatus($this->t('La configuration a été sauvegardée avec succès.'));
-    
     parent::submitForm($form, $form_state);
   }
   

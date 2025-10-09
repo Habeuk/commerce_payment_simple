@@ -59,7 +59,7 @@ class ManageOrder extends StripeService {
       $this->setOrderIdInSession($Order->id());
     }
     if (!$Order->isNew()) {
-      $paymentIntent = $this->getPaymentIntent($Order->getData('payment_intent_id'));
+      $paymentIntent = $this->getPaymentIntentReusable($Order->getData('payment_intent_id'));
       if (!$paymentIntent) {
         $paymentIntent = $this->CreatePaymentIntentFromOrder($Order);
         $Order->setData('payment_intent_id', $paymentIntent->id);
@@ -71,27 +71,49 @@ class ManageOrder extends StripeService {
     return $data;
   }
   
+  /**
+   *
+   * @param int $order_id
+   * @throws \Exception
+   */
   public function validatePayment(int $order_id) {
     $Order = Order::load($order_id);
     if (!$Order) {
       throw new \Exception("La commande n'existe plus ");
     }
-    $paymentIntent = $this->getPaymentIntent($Order->getData('payment_intent_id'));
-    if (!$paymentIntent) {
-      throw new \Exception("Erreur lors de l'optention de l'intention de payment");
-    }
-    if ($Order->getState() != 'completed') {
+    if ($Order->getState()->value != 'completed') {
+      $paymentIntent = $this->getPaymentIntent($Order->getData('payment_intent_id'));
+      if (!$paymentIntent) {
+        throw new \Exception("Erreur lors de l'optention de l'intention de payment");
+      }
       if ($this->isPaid($paymentIntent)) {
         $Order->set('state', 'completed');
+        $Order->set('order_number', $Order->id());
+        $Order->setData('paid_event_dispatched', true);
         $current_drupal_date_time = new DrupalDateTime('now', new \DateTimeZone('UTC'));
         $current_timestamp = $current_drupal_date_time->getTimestamp();
         $Order->setCompletedTime($current_timestamp);
+        //
+        \drupal::messenger()->addStatus(t('
+  <div>
+  <h3>🎉 Paiement Confirmé !</h3>
+    <p> Votre paiement a bien été reçu et nous sommes ravis de vous compter parmi nos clients.<br>
+    Votre site est désormais en cours de création 🚀.</p>
+    <p> Notre équipe vous contactera dans les 24 heures pour finaliser les détails de votre projet.</p>
+</div>
+', [], [
+          'context' => 'html'
+        ]), TRUE);
       }
       else {
         $Order->set('state', 'validation');
       }
       $Order->save();
     }
+    // $paymentIntent =
+    // $this->getPaymentIntent($Order->getData('payment_intent_id'));
+    // dd($paymentIntent);
+    // // $Order->save();
     $this->deleteOrderIdInSession();
   }
   
@@ -131,7 +153,7 @@ class ManageOrder extends StripeService {
   
   private function CreatePaymentIntentFromOrder(Order $Order) {
     $priceTotal = $Order->getTotalPrice();
-    return $this->CreatePaymentIntent($priceTotal->getNumber(), $priceTotal->getCurrencyCode());
+    return $this->CreatePaymentIntent($priceTotal->getNumber() * 100, $priceTotal->getCurrencyCode());
   }
   
 }

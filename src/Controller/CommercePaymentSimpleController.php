@@ -64,6 +64,8 @@ final class CommercePaymentSimpleController extends ControllerBase {
       $form['payment_element_wrapper']['#attributes']['data-return_url'] = $return_url;
       $form['payment_element_wrapper']['#attributes']['data-stripe_public_key'] = $data['stripe_public_key'];
       $form['payment_element_wrapper']['#attributes']['data-client_secret'] = $data['client_secret'];
+      $form['payment_element_wrapper']['#attributes']['data-order_id'] = $order->id();
+      $form['payment_element_wrapper']['#attributes']['data-uid'] = \Drupal::currentUser()->id();
       $form['payment_element_wrapper']['submit_payment_button'][0]['#value'] = $text_button_payment;
       $form['actions']['submit']['#value'] = $text_button_payment;
     }
@@ -94,7 +96,9 @@ final class CommercePaymentSimpleController extends ControllerBase {
   }
   
   public function paymentCompleted($order_id): array {
+    $order_id = (int) $order_id;
     $this->managePaymentOrder->validatePayment($order_id);
+    
     return [];
   }
   

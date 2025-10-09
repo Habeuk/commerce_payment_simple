@@ -26,6 +26,17 @@ class StripeService extends StripeInit {
     return $this->getStripeInstance()->paymentIntents->create($payment);
   }
   
+  public function getPaymentIntentReusable(string $paymentIntentId): PaymentIntent|false {
+    $paymentIntent = $this->getPaymentIntent($paymentIntentId);
+    if ($paymentIntent) {
+      // Le paiement doit etre dans un status en attente ...
+      if ($this->isPaymentIntentReusable($paymentIntent))
+        return $paymentIntent;
+      return false;
+    }
+    return $paymentIntent;
+  }
+  
   /**
    *
    * @param string $paymentIntentId
@@ -45,10 +56,7 @@ class StripeService extends StripeInit {
     if ($this->isFail($paymentIntent)) {
       return false;
     }
-    // Le paiement doit etre dans un status en attente ...
-    if ($this->isPaymentIntentReusable($paymentIntent))
-      return $paymentIntent;
-    return false;
+    return $paymentIntent;
   }
   
 }
