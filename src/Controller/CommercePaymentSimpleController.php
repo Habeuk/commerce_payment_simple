@@ -14,6 +14,7 @@ use Drupal\commerce_order\Entity\Order;
 use Drupal\commerce_price\CurrencyFormatter;
 use Drupal\Core\Url;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Entity\ContentEntityBase;
 
 /**
  * Returns responses for Commerce Payment Simple routes.
@@ -120,7 +121,8 @@ final class CommercePaymentSimpleController extends ControllerBase {
     return $request->attributes->get('_title');
   }
   
-  private function loadTranslate(&$entity) {
+  private function loadTranslate(ContentEntityBase &$entity) {
+    
     // on doit charger les données en fonction de la langue encours.
     $lang_code = $this->languageManager()->getCurrentLanguage()->getId();
     if ($entity->hasTranslation($lang_code)) {

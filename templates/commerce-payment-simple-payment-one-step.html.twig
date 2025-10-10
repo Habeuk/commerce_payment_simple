@@ -52,8 +52,8 @@
                     <div class="order-items">
                         {% for item in order.getItems() %}
                             <div class="order-item">
-                                <div>
-                                    <strong>{{ item.label() }}</strong>
+                                <div>                                	
+                                    <strong>{{ item.getPurchasedEntity().label() }}</strong>
                                     <div class="opacity-50 small">{{'Delivery in 72 hours'|t}}</div>
                                 </div>
                                 <div>{{ item.getTotalPrice()|commerce_price_format }}</div>
