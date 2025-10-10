@@ -44,7 +44,7 @@
                         <span>{{'Your data<br>protected'|t}}</span>
                     </div>
                 </div>
-                <div class="mt-3"> <a href="/node/182" class="back-link"> <i class="fas fa-arrow-left"></i> {{'Return to order'|t}}</a> </div>
+                <div class="mt-3"> <a href="{{ element['#back_url_service'] }}" class="back-link"> <i class="fas fa-arrow-left"></i> {{'Return to order'|t}}</a> </div>
             </div>            
             <div class="order-summary d-flex flex-column justify-content-between">
                 <h3 class="title d-flex justify-content-center align-items-baseline"> {% include '@commerce_payment_simple/includes/shopping-bag-icon.html.twig' %} {{'Your Order'|t}} </h3 >                
