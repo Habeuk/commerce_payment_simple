@@ -117,12 +117,12 @@ final class CommercePaymentSimpleController extends ControllerBase {
     $titlePrefix2 = $this->t('Reference');
     // Le module page_title recupere ce title.
     $build['#title'] = $titlePrefix . ' » ' . $titlePrefix2 . ': ' . $this->managePaymentOrder->getSkuVente($Order);
-    // on passe ce titre à la requete
+    // On passe ce titre à la requete
     $request->attributes->set('_title', $build['#title']);
     if (!empty($form['webform']['elements']['commande'])) {
-      // $form['webform']['elements']['commande']['#value'] = $order_id;
+      $form['webform']['elements']['commande']['#default_value'] = $Order;
+      $form['webform']['elements']['commande']['#value'] = $Order->label() . ' (' . $Order->id() . ')';
     }
-    // dd($form['webform']['elements']['commande']);
     return [
       '#theme' => 'commerce_payment_simple_payment_end',
       '#content' => $form
@@ -142,7 +142,6 @@ final class CommercePaymentSimpleController extends ControllerBase {
   }
   
   private function loadTranslate(ContentEntityBase &$entity) {
-    
     // on doit charger les données en fonction de la langue encours.
     $lang_code = $this->languageManager()->getCurrentLanguage()->getId();
     if ($entity->hasTranslation($lang_code)) {
