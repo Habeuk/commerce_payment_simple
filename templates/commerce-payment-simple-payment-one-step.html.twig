@@ -47,7 +47,10 @@
                 <div class="mt-3"> <a href="{{ element['#back_url_service'] }}" class="back-link"> <i class="fas fa-arrow-left"></i> {{'Return to order'|t}}</a> </div>
             </div>            
             <div class="order-summary d-flex flex-column justify-content-between">
-                <h3 class="title d-flex justify-content-center align-items-baseline"> {% include '@commerce_payment_simple/includes/shopping-bag-icon.html.twig' %} {{'Your Order'|t}} </h3 >                
+            	<div class="header text-center title">
+                	<h3 class=" d-flex justify-content-center align-items-baseline"> {% include '@commerce_payment_simple/includes/shopping-bag-icon.html.twig' %} {{'Your Order'|t}} </h3 > 
+                	<div class="small opacity-50"> {{'Reference'|t}}: {{ element['#sku_vente'] }}</div>
+                </div>               
                 <div>
                     <div class="order-items">
                         {% for item in order.getItems() %}
@@ -61,7 +64,7 @@
                         {% endfor %}                   
                         <div class="order-item">
                             <div>
-                                <strong>{{'1 month of free accommodation'|t}}</strong>
+                                <strong>{{'2 month of free accommodation'|t}}</strong>
                                 <div class="opacity-50 small">{{'Value 9.90€'|t}}</div>
                             </div>
                             <div>0,00 €</div>
@@ -82,8 +85,8 @@
                <div>
                		 <div class="guarantee">                
                         <div class="mb-2"> {% include '@commerce_payment_simple/includes/achievement-award-medal.html.twig' %} </div>
-                        <h3 class="h4">{{'Money Back Guarantee'|t}}</h3>
-                        <p>{{'14 days to change your mind. Full refund if not satisfied.'|t}}</p>
+                        <h3 class="h4">{{'Zero risk, 100% confidence'|t}}</h3>
+                        <p>{{'At Habeuk, we refund you if the agreed specifications are not met.<br>You only pay for work that meets our commitments.'|t}}</p>
                     </div>                
                     <div class="payment-methods">
                         <div class="payment-method">VISA</div>

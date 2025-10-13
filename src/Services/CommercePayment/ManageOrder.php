@@ -76,11 +76,7 @@ class ManageOrder extends StripeService {
    * @param int $order_id
    * @throws \Exception
    */
-  public function validatePayment(int $order_id) {
-    $Order = Order::load($order_id);
-    if (!$Order) {
-      throw new \Exception("La commande n'existe plus ");
-    }
+  public function validatePayment(Order $Order) {
     if ($Order->getState()->value != 'completed') {
       $paymentIntent = $this->getPaymentIntent($Order->getData('payment_intent_id'));
       if (!$paymentIntent) {
@@ -90,6 +86,7 @@ class ManageOrder extends StripeService {
         $Order->set('state', 'completed');
         $Order->set('order_number', $Order->id());
         $Order->setData('paid_event_dispatched', true);
+        $Order->setOrderNumber($this->getSkuVente($Order));
         $current_drupal_date_time = new DrupalDateTime('now', new \DateTimeZone('UTC'));
         $current_timestamp = $current_drupal_date_time->getTimestamp();
         $Order->setCompletedTime($current_timestamp);
@@ -115,6 +112,25 @@ class ManageOrder extends StripeService {
     // dd($paymentIntent);
     // // $Order->save();
     $this->deleteOrderIdInSession();
+  }
+  
+  /**
+   * Retourne le SKU de vente.
+   *
+   * @param Order $Order
+   */
+  public function getSkuVente(Order $Order) {
+    $items = $Order->getItems();
+    if ($items) {
+      foreach ($items as $item) {
+        $purchageEntity = $item->getPurchasedEntity();
+        if ($purchageEntity instanceof ProductVariation) {
+          return $purchageEntity->getSku() . '-' . $Order->id();
+        }
+        return $Order->id();
+      }
+    }
+    throw new \Exception("Aucun produit n'est disponible pour la vente");
   }
   
   private function deleteOrderIdInSession() {

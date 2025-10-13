@@ -62,7 +62,7 @@ final class PaymentStripeForm extends FormBase {
     ];
     // Élément Stripe
     $form['payment_method_title'] = [
-      '#markup' => '<label class="form-label">' . $this->t('Payment Method') . '</label>'
+      '#markup' => '<label class="form-label">' . $this->t('Payment methods') . '</label>'
     ];
     $form['payment_element_wrapper'] = [
       '#type' => 'container',
@@ -78,7 +78,7 @@ final class PaymentStripeForm extends FormBase {
       
       // Conteneur où Stripe.js va injecter le Payment Element
       'payment_element_placeholder' => [
-        '#markup' => '<div class="payment-element">Loading...</div>'
+        '#markup' => '<div class="payment-element">' . $this->t('Loading') . '...</div>'
       ],
       // Affichage des messages d'erreur/succès de Stripe
       'payment_message' => [
@@ -99,7 +99,9 @@ final class PaymentStripeForm extends FormBase {
             'w-100',
             'border-radius-10',
             'fw-light',
-            'btn-lg'
+            'btn-lg',
+            'loading',
+            'disabled'
           ]
         ],
         [

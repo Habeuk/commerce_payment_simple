@@ -3,6 +3,7 @@ commerce_payment_simple.payment_end:
   defaults:
     _title: 'Payment terminé'
     _controller: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController:paymentCompleted'
+    _title_callback: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController::getTitlePage'
   requirements:
     _permission: 'access content'
 

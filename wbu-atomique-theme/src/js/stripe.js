@@ -8,6 +8,9 @@ class StripePayement {
     this.stripe;
     this.return_url;
     this.elements;
+    this.clientLanguage = "en";
+    this.paymentElementReady = false;
+    this.submitPayment;
   }
   //
   init() {
@@ -18,35 +21,49 @@ class StripePayement {
     this.return_url = elementWrapper.dataset.return_url;
     this.order_id = elementWrapper.dataset.order_id;
     this.uid = elementWrapper.dataset.uid;
+    this.submitPayment = this.container_tags.querySelector(".submit-payment");
+    this.clientLanguage = window.drupalSettings?.path?.currentLanguage && window.drupalSettings?.path?.currentLanguage != "" ? window.drupalSettings.path.currentLanguage : "en";
     // Vérifier si Stripe est disponible globalement
     if (!window.Stripe || typeof window.Stripe === "undefined") {
       this.showMessage("Erreur: La bibliothèque Stripe n'est pas chargée.");
+      this.paymentIsBussy(false);
       return;
     }
-
     try {
       this.stripe = window.Stripe(this.stripe_public_key);
-      this.elements = this.stripe.elements({ clientSecret: this.client_secret });
-
+      this.elements = this.stripe.elements({ clientSecret: this.client_secret, locale: this.clientLanguage });
+      this.paymentIsBussy(true);
       const paymentElementOptions = {
         layout: "accordion",
+        wallets: {
+          link: "never", //Désactiver Link |'always'|'auto'|'never'
+          // applePay: "never",
+          // googlePay: "never",
+        },
       };
       const paymentElement = this.elements.create("payment", paymentElementOptions);
+      // Écouter l'événement 'ready' qui est émis lorsque l'élément est chargé et affiché
+      paymentElement.on("ready", () => {
+        this.paymentElementReady = true;
+        this.paymentIsBussy(false);
+      });
       paymentElement.mount(this.container_tags.querySelector(".payment-element"));
-
-      const submitPayment = this.container_tags.querySelector(".submit-payment");
-      if (submitPayment) {
-        submitPayment.addEventListener("click", (event) => {
+      if (this.submitPayment) {
+        this.submitPayment.addEventListener("click", (event) => {
           this.proccedPayment(event);
         });
       }
     } catch (error) {
       this.showMessage("Erreur lors de l'initialisation de Stripe: " + error.message);
+      this.paymentIsBussy(false);
     }
   }
   //
   proccedPayment(e) {
     e.preventDefault();
+    if (!this.paymentElementReady) {
+      return;
+    }
     if (!this.stripe) {
       this.showMessage("Erreur: Le système de paiement n'est pas initialisé correctement.");
       return;
@@ -66,7 +83,7 @@ class StripePayement {
       this.showMessage("L'email est requis");
       return;
     }
-
+    this.paymentIsBussy(true);
     this.stripe
       .confirmPayment({
         elements: this.elements,
@@ -88,10 +105,12 @@ class StripePayement {
         console.log("result : ", result);
         console.log("result.error : ", result.error);
         this.showMessage(result.error.message);
+        this.paymentIsBussy(false);
       })
       .catch((error) => {
         console.log("error : ", error);
         this.showMessage("Erreur lors du paiement: " + error.message);
+        this.paymentIsBussy(false);
       });
   }
   showMessage(messageText) {
@@ -102,6 +121,13 @@ class StripePayement {
       messageContainer.classList.add("hidden");
       messageContainer.textContent = "";
     }, 15000);
+  }
+  paymentIsBussy(status) {
+    if (status) {
+      this.submitPayment.classList.add("loading", "disabled");
+    } else {
+      this.submitPayment.classList.remove("loading", "disabled");
+    }
   }
 }
 export default StripePayement;

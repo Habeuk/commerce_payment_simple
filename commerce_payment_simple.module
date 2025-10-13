@@ -14,6 +14,9 @@ function commerce_payment_simple_theme($existing, $type, $theme, $path) {
   $templates['commerce_payment_simple_payment_one_step'] = [
     'render element' => 'element'
   ];
+  $templates['commerce_payment_simple_payment_end'] = [
+    'render element' => 'element'
+  ];
   return $templates;
 }
 

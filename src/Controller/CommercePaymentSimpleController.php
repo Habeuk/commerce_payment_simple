@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Drupal\commerce_payment_simple\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\commerce_product\Entity\Product;
 use Drupal\commerce_product\Entity\ProductVariation;
 use Stephane888\Debug\debugLog;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,6 +75,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
       $form['payment_element_wrapper']['submit_payment_button'][0]['#value'] = $text_button_payment;
       $form['actions']['submit']['#value'] = $text_button_payment;
     }
+    $sku_vente = $this->managePaymentOrder->getSkuVente($order);
     $build['content'] = [
       '#theme' => 'commerce_payment_simple_payment_one_step',
       '#form' => $form,
@@ -87,6 +87,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
       '#text_button_payment' => $text_button_payment,
       '#return_url' => $return_url,
       '#back_url_service' => $back_url,
+      '#sku_vente' => $sku_vente,
       '#attached' => [
         'library' => [
           'commerce_payment_simple/stripe'
@@ -102,11 +103,30 @@ final class CommercePaymentSimpleController extends ControllerBase {
     return $build;
   }
   
-  public function paymentCompleted($order_id): array {
+  public function paymentCompleted($order_id, Request $request): array {
+    $form = [];
     $order_id = (int) $order_id;
-    $this->managePaymentOrder->validatePayment($order_id);
-    
-    return [];
+    $Order = Order::load($order_id);
+    if (!$Order) {
+      throw new \Exception("La commande n'existe plus ");
+    }
+    $this->managePaymentOrder->validatePayment($Order);
+    $webform = $this->entityTypeManager()->getStorage('webform')->load('commande_site_basic');
+    $form['webform'] = $this->entityTypeManager()->getViewBuilder('webform')->view($webform);
+    $titlePrefix = $this->t('Payment completed');
+    $titlePrefix2 = $this->t('Reference');
+    // Le module page_title recupere ce title.
+    $build['#title'] = $titlePrefix . ' » ' . $titlePrefix2 . ': ' . $this->managePaymentOrder->getSkuVente($Order);
+    // on passe ce titre à la requete
+    $request->attributes->set('_title', $build['#title']);
+    if (!empty($form['webform']['elements']['commande'])) {
+      // $form['webform']['elements']['commande']['#value'] = $order_id;
+    }
+    // dd($form['webform']['elements']['commande']);
+    return [
+      '#theme' => 'commerce_payment_simple_payment_end',
+      '#content' => $form
+    ];
   }
   
   /**
