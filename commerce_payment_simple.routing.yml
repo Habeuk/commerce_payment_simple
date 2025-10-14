@@ -6,6 +6,9 @@ commerce_payment_simple.payment_end:
     _title_callback: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController::getTitlePage'
   requirements:
     _permission: 'access content'
+  options:
+    # Désactive le cache de page
+    no_cache: true
 
 
 commerce_payment_simple.payment_one_step:
@@ -16,6 +19,9 @@ commerce_payment_simple.payment_one_step:
     _title_callback: '\Drupal\commerce_payment_simple\Controller\CommercePaymentSimpleController::getTitlePage'
   requirements:
     _permission: 'access content'
+  options:
+    # Désactive le cache de page
+    no_cache: true
 
 commerce_payment_simple.settings:
   path: '/admin/config/system/settings'

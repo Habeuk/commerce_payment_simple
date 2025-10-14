@@ -1,14 +1,16 @@
 stripe:
   css:
     theme:
-      css/stripe.css: {}
+      css/stripe.css: {preprocess: false}
   js:
-    js/stripe.js: {}
+    js/stripe.js: {preprocess: false}
   dependencies:
     - commerce_payment_simple/stripe_api
 
 stripe_api:
   js:
-    https://js.stripe.com/basil/stripe.js:
+    https://js.stripe.com/v3/:
       type: external
-      minified: true
+      minified: false
+      preprocess: false
+      cache: false

@@ -76,6 +76,12 @@ final class CommercePaymentSimpleController extends ControllerBase {
       $form['actions']['submit']['#value'] = $text_button_payment;
     }
     $sku_vente = $this->managePaymentOrder->getSkuVente($order);
+    // Désactivation du cache
+    $build = [
+      '#cache' => [
+        'max-age' => 0
+      ]
+    ];
     $build['content'] = [
       '#theme' => 'commerce_payment_simple_payment_one_step',
       '#form' => $form,
@@ -125,7 +131,12 @@ final class CommercePaymentSimpleController extends ControllerBase {
     }
     return [
       '#theme' => 'commerce_payment_simple_payment_end',
-      '#content' => $form
+      '#content' => $form,
+      '#time_cache' => time(),
+      // Désactivation du cache
+      '#cache' => [
+        'max-age' => 0
+      ]
     ];
   }
   
