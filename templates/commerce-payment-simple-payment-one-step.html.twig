@@ -30,7 +30,7 @@
                         {% else %}
                         <div class="alert alert-danger border-radius-10 margin-top margin-bottom"> <h4>{{'Configuration error'|t}}</h4> <p> {{'Please try again later.'|t}}</p> </div>                        
                     {% endif %}   
-                <div class="security-badges bg-wbu-thirdly border-radius-10">
+                <div class="security-badges bg-wbu-thirdly border-radius-10 flex-wrap w-100">
                     <div class="badge">
                         <div class="mb-2"> {% include '@commerce_payment_simple/includes/ssl-icon.html.twig' %} </div>
                         <span>{{'Secure <br> SSL payment'|t}}</span>

@@ -5,16 +5,28 @@
 .payment-container {
   border-radius: $wbu-margin;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  flex-direction: column;
+  @include media-min(MD) {
+    flex-direction: row;
+  }
   .payment-form,
   .order-summary {
-    padding: $wbu-margin * 2;
+    padding: $wbu-margin $wbu-margin * 0.5;
+    @include media-min(SM) {
+      padding: $wbu-margin * 2;
+    }
   }
   .order-summary {
     color: white;
-    border-radius: 0 $wbu-margin $wbu-margin 0;
+    border-radius: $wbu-margin $wbu-margin 0 0;
     position: relative;
     background-image: url(/sites/default/files/styles/wide_1900/public/2025-07/pexels-artempodrez-7233376_4.jpg?itok=2H37nU1a);
     background-size: contain;
+    order: 1;
+    @include media-min(MD) {
+      border-radius: 0 $wbu-margin $wbu-margin 0;
+      order: 2;
+    }
     &::before {
       content: "";
       background: linear-gradient(135deg, $wbu-background 0%, $wbu-color-secondary 100%);
@@ -25,7 +37,10 @@
       right: 0;
       bottom: 0;
       position: absolute;
-      border-radius: 0 $wbu-margin $wbu-margin 0;
+      border-radius: $wbu-margin $wbu-margin 0 0;
+      @include media-min(MD) {
+        border-radius: 0 $wbu-margin $wbu-margin 0;
+      }
     }
     > * {
       position: relative;
@@ -41,7 +56,12 @@
   }
   .payment-form {
     background: linear-gradient(135deg, #ffffff 0%, #f0f2ff 100%);
-    border-radius: $wbu-margin 0 0 $wbu-margin;
+    border-radius: 0 0 $wbu-margin $wbu-margin;
+    order: 2;
+    @include media-min(MD) {
+      order: 1;
+      border-radius: $wbu-margin 0 0 $wbu-margin;
+    }
   }
   @include media-min(MD) {
     .payment-form {
