@@ -79,7 +79,7 @@
                     </div>                
                     <div class="order-total h4 fw-bold">
                         <div>{{'Total TTC'|t}}</div>
-                        <div>190,00 €</div>
+                        <div>{{ order.getTotalPrice()|commerce_price_format }}</div>
                     </div>  
                 </div>              
                <div>
