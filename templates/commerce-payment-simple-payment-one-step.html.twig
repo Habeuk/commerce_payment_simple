@@ -30,7 +30,7 @@
                         {% else %}
                         <div class="alert alert-danger border-radius-10 margin-top margin-bottom"> <h4>{{'Configuration error'|t}}</h4> <p> {{'Please try again later.'|t}}</p> </div>                        
                     {% endif %}   
-                <div class="security-badges bg-wbu-thirdly border-radius-10 flex-wrap w-100">
+                <div class="security-badges bg-wbu-thirdly border-radius-10 flex-wrap w-100"> 
                     <div class="badge">
                         <div class="mb-2"> {% include '@commerce_payment_simple/includes/ssl-icon.html.twig' %} </div>
                         <span>{{'Secure <br> SSL payment'|t}}</span>
@@ -79,7 +79,7 @@
                     </div>                
                     <div class="order-total h4 fw-bold">
                         <div>{{'Total TTC'|t}}</div>
-                        <div>190,00 €</div>
+                        <div>{{ item.getTotalPrice()|commerce_price_format }}</div>
                     </div>  
                 </div>              
                <div>
