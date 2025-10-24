@@ -18,7 +18,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 /**
  * Returns responses for Commerce Payment Simple routes.
  */
-final class CommercePaymentSimpleController extends ControllerBase {
+class CommercePaymentSimpleController extends ControllerBase {
   
   function __construct(private readonly ManageOrder $managePaymentOrder, private readonly CurrencyFormatter $priceFormatter) {
   }
@@ -47,7 +47,7 @@ final class CommercePaymentSimpleController extends ControllerBase {
     /**
      *
      * @var Order $order
-     */
+    */
     $order = $data['order'];
     
     $price = $order->getTotalPrice();

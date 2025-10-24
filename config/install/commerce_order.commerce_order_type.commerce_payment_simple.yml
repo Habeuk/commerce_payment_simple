@@ -1,0 +1,25 @@
+langcode: fr
+status: true
+dependencies:
+  module:
+    - commerce_cart
+    - commerce_checkout
+third_party_settings:
+  commerce_cart:
+    cart_block_view: commerce_cart_block
+    cart_form_view: commerce_cart_form
+    cart_expiration: {  }
+    enable_cart_message: false
+  commerce_checkout:
+    checkout_flow: default
+id: commerce_payment_simple
+label: 'Commerce payment simple'
+traits: {  }
+locked: false
+workflow: order_default_validation
+numberPattern: null
+refresh_mode: customer
+refresh_frequency: 300
+sendReceipt: true
+receiptBcc: ''
+receiptSubject: ''
